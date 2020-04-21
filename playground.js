@@ -1,0 +1,2 @@
+const cosa = "_octo=GH1.1.349947777.1585017639; _ga=GA1.2.918775446.1585018562; tz=America%2FMexico_City";
+console.log(cosa.split(";").map(item => ({ "name":`${item.split("=")[0].trim()}`, "value": `${item.split("=")[1].trim()}` })).reduce((acc, item) => ([...acc, item]), []))
