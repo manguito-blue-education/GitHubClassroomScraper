@@ -56,7 +56,7 @@ const main = async () => {
     await browser.close();
 
     const csvWriter = createCsvWriter({
-      path: `./${availableActivities[0].activityTitle
+      path: `./output/${availableActivities[0].activityTitle
         .trim()
         .split(" ")
         .join("_")}.csv`,
