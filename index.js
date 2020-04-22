@@ -1,5 +1,8 @@
 // Para copiar las urls del classroom ejecuta lo siguiente en la consola
 // copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
+const dotenv = require('dotenv');
+dotenv.config();
+
 const puppeteer = require("puppeteer");
 
 process.setMaxListeners(Infinity);
@@ -33,8 +36,6 @@ const main = async () => {
     ]);
 
     await page.waitForNavigation({ waitUntil: "networkidle0" });
-
-    await page.screenshot({ path: "buddy-screenshot.png" });
 
     const availableActivities = await page.evaluate(() => {
       const activityTitle = document.getElementsByTagName("h1")[0].innerText;
