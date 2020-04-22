@@ -1,3 +1,4 @@
+// For getting activities link, use the following snippet inside browser console
 // Para copiar las urls del classroom ejecuta lo siguiente en la consola
 // copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
 const dotenv = require('dotenv');
