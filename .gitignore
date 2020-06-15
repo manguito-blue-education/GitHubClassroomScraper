@@ -2,3 +2,5 @@
 .env
 *.csv
 .DS_Store
+node_modules/
+.ipynb_checkpoints/

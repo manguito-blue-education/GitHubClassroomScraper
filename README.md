@@ -27,5 +27,11 @@ Generate a `.env` file based on the `.demo.env`, and fill with your own credenti
 
 After executing `main.sh`, inside the `output` folder you may see the results of scraping your activities.
 
+### 5. Merge your results (Optional)
+
+```sh
+# Execute a container to create a merged csv
+docker run --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -e GRANT_SUDO=yes --user root -v "$PWD":/home/jovyan/work jupyter/scipy-notebook
+```
 
 Made with 💙 from 🇲🇽
