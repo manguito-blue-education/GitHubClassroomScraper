@@ -13,9 +13,13 @@ copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href)
 
 This will put in your clipboard all the activity links
 
-### 2. Modifiy `main.sh`
+### 2. Run the createScript file
 
-Inside `main.sh` modify the activity links, by the new ones. Be careful with the syntaxis.
+Paste the last output inside the `urlsList` variable, and then run the `createScript.js` file
+
+```bash
+node createScript.js
+```
 
 ### 3. Generate .env
 
