@@ -1,4 +1,4 @@
-module.exports.login = async page => {
+export const login = async page => {
   await page.type("#login_field", process.env.GH_EMAIL || "your_email");
   await page.type("#password", process.env.GH_PASSWORD || "your_pswd");
 
@@ -18,7 +18,7 @@ module.exports.login = async page => {
   return page;
 };
 
-module.exports.getActivityUsers = async page => {
+export const getActivityUsers = async page => {
   return await page.evaluate(() => {
     const activityTitle = document.getElementsByTagName("h1")[0].innerText;
     const users = [

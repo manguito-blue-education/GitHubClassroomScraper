@@ -1,6 +1,3 @@
-// For getting activities link, use the following snippet inside browser console
-// Para copiar las urls del classroom ejecuta lo siguiente en la consola
-// copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
 const activitiesUrls = [
   "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-1-hello-world-js",
   "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-1-hello-world-python",
@@ -19,15 +16,15 @@ const activitiesUrls = [
   "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/extra-web-activity",
 ];
 
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
+import puppeteer from "puppeteer";
+import csvWriter from "csv-writer";
+import { login, getActivityUsers } from "./utils/utils.js";
+
 dotenv.config();
-
-const puppeteer = require("puppeteer");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 process.setMaxListeners(Infinity);
-const { login, getActivityUsers } = require("./utils/utils.js");
+const createCsvWriter = csvWriter.createObjectCsvWriter;
 
-// const activityUrl = process.argv.slice(2)[0] || "";
 const activityUrl = activitiesUrls[0];
 
 const main = async () => {
