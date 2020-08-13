@@ -1,16 +1,34 @@
 // For getting activities link, use the following snippet inside browser console
 // Para copiar las urls del classroom ejecuta lo siguiente en la consola
 // copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
-const dotenv = require('dotenv');
+const activitiesUrls = [
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-1-hello-world-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-1-hello-world-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-2-geometry-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-2-geometry-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-3-array-of-multiples-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-3-array-of-multiples-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-4-get-budget-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-4-get-budget-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-5-broken-keyboard-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-5-broken-keyboard-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-6-highest-occurrence-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-6-highest-occurrence-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-7-word-search-js",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/activity-7-word-search-python",
+  "https://classroom.github.com/classrooms/47409156-prepadawans-gen-8/assignments/extra-web-activity",
+];
+
+const dotenv = require("dotenv");
 dotenv.config();
 
 const puppeteer = require("puppeteer");
-
-process.setMaxListeners(Infinity);
-
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+process.setMaxListeners(Infinity);
+const { login, getActivityUsers } = require("./utils/utils.js");
 
-const activityUrl = process.argv.slice(2)[0] || "";
+// const activityUrl = process.argv.slice(2)[0] || "";
+const activityUrl = activitiesUrls[0];
 
 const main = async () => {
   try {
@@ -21,38 +39,8 @@ const main = async () => {
 
     await page.goto(activityUrl);
 
-    await page.type("#login_field", process.env.GH_EMAIL || "your_email");
-    await page.type("#password", process.env.GH_PASSWORD || "your_pswd");
-
-    await Promise.all([
-      page.click(".btn.btn-primary.btn-block"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-    ]);
-
-    await page.type("#otp", process.env.GH_OTP_PASSWORD || "your_otp");
-
-    await Promise.all([
-      page.click(".btn.btn-primary.btn-block"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-    ]);
-
-    await page.waitForNavigation({ waitUntil: "networkidle0" });
-
-    const availableActivities = await page.evaluate(() => {
-      const activityTitle = document.getElementsByTagName("h1")[0].innerText;
-      const users = [
-        ...document.getElementsByClassName("assignment-repo-list-item"),
-      ].map((item) => {
-        const userName = item.children[0].children[1].children[0].innerText;
-        const description = item.children[0].children[1].children[1].innerText
-          .trim()
-          .split("\n")
-          .join(" ");
-        return { userName, description };
-      });
-
-      return users.map((user) => ({ ...user, activityTitle }));
-    });
+    await login(page);
+    const availableActivities = await getActivityUsers(page);
 
     await browser.close();
 
