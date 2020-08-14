@@ -1,13 +1,15 @@
 import dotenv from "dotenv";
 import puppeteer from "puppeteer";
-import csvWriter from "csv-writer";
-import { login, getActivityUsers } from "./utils/utils.js";
+import { login, getActivityUsers } from "./utils/pageUtils.js";
+import {
+  parseActivityInfo,
+  saveResultsPerActivity,
+  saveResultsPerUser,
+} from "./utils/persistanceUtils.js";
 import reduce from "awaity/reduce.js";
 import fs from "fs";
 
 dotenv.config();
-// process.setMaxListeners(Infinity);
-const createCsvWriter = csvWriter.createObjectCsvWriter;
 
 const main = async (
   activitiesUrls,
@@ -45,20 +47,12 @@ const main = async (
     fs.writeFileSync("./cosa.json", JSON.stringify(allActivities, null, "\t"));
 
     await browser.close();
+    const parsedActivities = allActivities.map(activity =>
+      parseActivityInfo(activity)
+    );
+    saveResultsPerActivity(parsedActivities);
 
-    // const csvWriter = createCsvWriter({
-    //   path: `./output/${availableActivities[0].activityTitle
-    //     .trim()
-    //     .split(" ")
-    //     .join("_")}.csv`,
-    //   header: [
-    //     { id: "activityTitle", title: "Actividad" },
-    //     { id: "userName", title: "Usuario" },
-    //     { id: "description", title: "Descripción" },
-    //   ],
-    // });
-
-    // await csvWriter.writeRecords(availableActivities);
+    await saveResultsPerUser(parsedActivities);
   } catch (error) {
     console.log("An error occured while parsing activities: ", error.message);
   }
