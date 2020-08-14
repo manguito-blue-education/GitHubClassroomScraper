@@ -13,9 +13,6 @@ export const login = async page => {
     page.click(".btn.btn-primary.btn-block"),
     page.waitForNavigation({ waitUntil: "networkidle0" }),
   ]);
-
-  await page.waitForNavigation({ waitUntil: "networkidle0" });
-  return page;
 };
 
 export const getActivityUsers = async page => {
