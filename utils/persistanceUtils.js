@@ -45,7 +45,7 @@ export const saveResultsPerActivity = parsedActivityList => {
   }, {});
 
   fs.writeFileSync(
-    "./output/resultsPerActivity.json",
+    "./resultsPerActivity.json",
     JSON.stringify(resultsPerActivity, null, "\t")
   );
 
@@ -90,7 +90,7 @@ export const saveResultsPerUser = async parsedActivityList => {
   });
 
   const csvWriter = createCsvWriter({
-    path: `./output/resultsPerUser.csv`,
+    path: `./resultsPerUser.csv`,
     header: [
       { id: "userName", title: "Usuario" },
       { id: "submittedActivities", title: "Actividades Subidas" },
