@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import puppeteer from "puppeteer";
 import {
   login,
@@ -13,12 +12,13 @@ import {
 import reduce from "awaity/reduce.js";
 import fs from "fs";
 
-dotenv.config();
-
-const main = async (
+export default async (
   classroomUrl,
+  user,
+  password,
+  otp,
   {
-    regularWait = 3000,
+    regularWait = 5000,
     headless = true,
     navigationTimeout = 24000,
     defaultViewport = null,
@@ -30,9 +30,11 @@ const main = async (
     await page.setDefaultNavigationTimeout(navigationTimeout);
 
     await page.goto(classroomUrl);
-    await login(page);
+    console.log("Trying login...");
+    await login(page, user, password, otp);
     await page.waitForNavigation({ waitUntil: "networkidle0" });
     await page.waitFor(regularWait);
+    console.log("Login successful");
 
     const activitiesUrls = await getClassroomActivities(
       page,
@@ -60,11 +62,9 @@ const main = async (
     saveResultsPerActivity(parsedActivities);
 
     await saveResultsPerUser(parsedActivities);
+    return allActivities;
   } catch (error) {
     console.log("An error occured while parsing activities: ", error.message);
+    return null;
   }
 };
-main("https://classroom.github.com/classrooms/47409156-prepadawans-gen-8", {
-  regularWait: 7000,
-  headless: false,
-});

@@ -10,13 +10,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["github", "classroom", "scraper"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "awaity": "^1.0.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^8.2.0",
-    "puppeteer": "^3.0.0"
+    "puppeteer": "^3.0.0",
+    "yargs": "^15.4.1"
   }
 }

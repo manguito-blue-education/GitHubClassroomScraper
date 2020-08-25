@@ -1,13 +1,13 @@
-export const login = async page => {
-  await page.type("#login_field", process.env.GH_EMAIL || "your_email");
-  await page.type("#password", process.env.GH_PASSWORD || "your_pswd");
+export const login = async (page, username, password, otp) => {
+  await page.type("#login_field", username);
+  await page.type("#password", password);
 
   await Promise.all([
     page.click(".btn.btn-primary.btn-block"),
     page.waitForNavigation({ waitUntil: "networkidle0" }),
   ]);
 
-  await page.type("#otp", process.env.GH_OTP_PASSWORD || "your_otp");
+  await page.type("#otp", otp);
 
   await Promise.all([
     page.click(".btn.btn-primary.btn-block"),
