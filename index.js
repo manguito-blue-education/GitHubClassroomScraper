@@ -1,77 +1,70 @@
-// For getting activities link, use the following snippet inside browser console
-// Para copiar las urls del classroom ejecuta lo siguiente en la consola
-// copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
-const dotenv = require('dotenv');
-dotenv.config();
+import puppeteer from "puppeteer";
+import {
+  login,
+  getActivityUsers,
+  getClassroomActivities,
+} from "./utils/pageUtils.js";
+import {
+  parseActivityInfo,
+  saveResultsPerActivity,
+  saveResultsPerUser,
+} from "./utils/persistanceUtils.js";
+import reduce from "awaity/reduce.js";
+import fs from "fs";
 
-const puppeteer = require("puppeteer");
-
-process.setMaxListeners(Infinity);
-
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
-
-const activityUrl = process.argv.slice(2)[0] || "";
-
-const main = async () => {
+export default async (
+  classroomUrl,
+  user,
+  password,
+  otp,
+  {
+    regularWait = 5000,
+    headless = true,
+    navigationTimeout = 24000,
+    defaultViewport = null,
+  } = {}
+) => {
   try {
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({ headless, defaultViewport });
     const page = await browser.newPage();
-    await page.setDefaultNavigationTimeout(240000);
-    await page.setViewport({ width: 1920, height: 926 });
+    await page.setDefaultNavigationTimeout(navigationTimeout);
 
-    await page.goto(activityUrl);
-
-    await page.type("#login_field", process.env.GH_EMAIL || "your_email");
-    await page.type("#password", process.env.GH_PASSWORD || "your_pswd");
-
-    await Promise.all([
-      page.click(".btn.btn-primary.btn-block"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-    ]);
-
-    await page.type("#otp", process.env.GH_OTP_PASSWORD || "your_otp");
-
-    await Promise.all([
-      page.click(".btn.btn-primary.btn-block"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
-    ]);
-
+    await page.goto(classroomUrl);
+    console.log("Trying login...");
+    await login(page, user, password, otp);
     await page.waitForNavigation({ waitUntil: "networkidle0" });
+    await page.waitFor(regularWait);
+    console.log("Login successful");
 
-    const availableActivities = await page.evaluate(() => {
-      const activityTitle = document.getElementsByTagName("h1")[0].innerText;
-      const users = [
-        ...document.getElementsByClassName("assignment-repo-list-item"),
-      ].map((item) => {
-        const userName = item.children[0].children[1].children[0].innerText;
-        const description = item.children[0].children[1].children[1].innerText
-          .trim()
-          .split("\n")
-          .join(" ");
-        return { userName, description };
-      });
+    const activitiesUrls = await getClassroomActivities(
+      page,
+      classroomUrl,
+      regularWait
+    );
+    const allActivities = await reduce.default(
+      activitiesUrls,
+      async (carry, activityUrl, idx) => {
+        console.log("Fetching:", activityUrl);
+        await page.goto(activityUrl);
 
-      return users.map((user) => ({ ...user, activityTitle }));
-    });
+        await page.waitFor(regularWait);
+        const availableActivities = await getActivityUsers(page);
+
+        return [...carry, ...availableActivities];
+      },
+      []
+    );
 
     await browser.close();
+    const parsedActivities = allActivities.map(activity =>
+      parseActivityInfo(activity)
+    );
+    saveResultsPerActivity(parsedActivities);
 
-    const csvWriter = createCsvWriter({
-      path: `./output/${availableActivities[0].activityTitle
-        .trim()
-        .split(" ")
-        .join("_")}.csv`,
-      header: [
-        { id: "activityTitle", title: "Actividad" },
-        { id: "userName", title: "Usuario" },
-        { id: "description", title: "Descripción" },
-      ],
-    });
-
-    await csvWriter.writeRecords(availableActivities);
+    await saveResultsPerUser(parsedActivities);
+    return allActivities;
   } catch (error) {
-    console.log("valió vrg", error);
+    console.log("An error occured while parsing activities: ", error.message);
+    return null;
   }
 };
-
-main();

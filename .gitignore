@@ -5,3 +5,5 @@
 node_modules/
 .ipynb_checkpoints/
 main.sh
+playground.js
+*.json
