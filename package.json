@@ -1,6 +1,6 @@
 {
   "name": "@hackademymx/github-classroom-scraper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scraper for the GitHub Classroom site.",
   "main": "index.js",
   "type": "module",
@@ -16,7 +16,11 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["github", "classroom", "scraper"],
+  "keywords": [
+    "github",
+    "classroom",
+    "scraper"
+  ],
   "author": "roeeyn",
   "license": "MIT",
   "repository": {
