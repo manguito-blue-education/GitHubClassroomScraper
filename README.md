@@ -42,11 +42,11 @@ It will throw two files:
 {
   "Activity Name": [
     {
-      "userName": username,
-      "description": The user's activity message. e.g. 'Latest commit passed 7 commits Submitted',
-      "activityTitle": Activity Name,
-      "isSubmitted": Parsed submitted value in description,
-      "commitsMade": Parsed commits value in description
+      "userName": "student username",
+      "description": "The user's activity message. e.g. 'Latest commit passed 7 commits Submitted'",
+      "activityTitle": "Activity Name",
+      "isSubmitted": "Parsed submitted value in description",
+      "commitsMade": "Parsed commits value in description"
     }
   ]
 }
@@ -55,6 +55,7 @@ It will throw two files:
 - `resultsPerUser.csv`: A condensed activities for JS and Python exercises. It has the following columns:
 
 |User|Activities|Submitted|Python Completed|JS Completed|Total Tried Activities|
+|-|-|-|-|-|-|
 
 ## Contribution
 
