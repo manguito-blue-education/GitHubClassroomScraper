@@ -1,18 +1,29 @@
 {
-  "name": "github-classroom-scrapper",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@hackademymx/github-classroom-scraper",
+  "version": "0.1.0",
+  "description": "Scraper for the GitHub Classroom site.",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "github-classroom-scraper": "./cli.js"
+  },
   "prettier": {
     "arrowParens": "avoid"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": ["github", "classroom", "scraper"],
-  "author": "",
-  "license": "ISC",
+  "author": "roeeyn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manguito-blue-education/GitHubClassroomScraper.git"
+  },
+  "homepage": "https://github.com/manguito-blue-education/GitHubClassroomScraper#readme",
   "dependencies": {
     "awaity": "^1.0.0",
     "csv-writer": "^1.6.0",
