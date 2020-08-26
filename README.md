@@ -1,6 +1,6 @@
 # GitHub Classroom Scraper
 
-Scraper for obtaining information about activities from a GitHub classroom.
+CLI scraper for obtaining information about activities from a GitHub classroom.
 
 ## Requirements
 
