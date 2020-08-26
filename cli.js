@@ -1,11 +1,7 @@
-#!/usr/bin/env node
 import scrapper from "./index.js";
-import dotenv from "dotenv";
 import yargs from "yargs";
 
-dotenv.config();
-
-const { u, h, r, o } = yargs
+const { u: classroomUrl, h: headless, r: regularWait, o: otp } = yargs
   .option("classroom-url", {
     alias: "u",
     describe:
@@ -31,13 +27,18 @@ const { u, h, r, o } = yargs
   })
   .option("headless", {
     alias: "h",
-    describe: "Add --no-headless if you want to see the actual automated browser working.",
+    describe:
+      "Add --no-headless if you want to see the actual automated browser working.",
     type: "boolean",
     nargs: 0,
   })
   .help().argv;
 
-scrapper(u, process.env.GH_EMAIL, process.env.GH_PASSWORD, o, {
-  regularWait: r,
-  headless: !h,
-});
+const { GH_EMAIL: email, GH_PASSWORD: password } = process.env;
+
+if (email && password)
+  scrapper(classroomUrl, process.env.GH_EMAIL, process.env.GH_PASSWORD, otp, {
+    regularWait: regularWait,
+    headless: !headless,
+  });
+else console.log("ENV variables GH_EMAIL and GH_PASSWORD are required");
