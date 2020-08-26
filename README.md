@@ -1,41 +1,74 @@
-# GitHub Classroom Scrapper
+# GitHub Classroom Scraper
 
-Scrapper for obtaining users and status per activity
+Scraper for obtaining information about activities from a GitHub classroom.
 
-## How to use
+## Requirements
 
-### 1. Obtain activity links
-First obtain your link activities by executing the following inside the actual classroom page:
+- Have installed the latest version of [node](https://nodejs.org/en/).
+- Enabled 2 factor authentication in your GitHub account.
+- You need to set env variables with your GitHub username and password, they are `GH_EMAIL`, `GH_PASSWORD` respectively.
 
-```javascript
-copy([...document.getElementsByTagName("h3")].map(item => item.children[0].href));
-```
+## Install
 
-This will put in your clipboard all the activity links
-
-### 2. Run the createScript file
-
-Paste the last output inside the `urlsList` variable, and then run the `createScript.js` file
+To install this tool, you need to do it with npm.
 
 ```bash
-node createScript.js
+npm i -g @hackademymx/github-classroom-scraper
 ```
 
-### 3. Generate .env
+## Usage
 
-Generate a `.env` file based on the `.demo.env`, and fill with your own credentials.
+To use the tool, you need to type:
 
-**This version only supports the auth method WITH 2FA (two factor authentication)**
-
-### 4. See the results
-
-After executing `main.sh`, inside the `output` folder you may see the results of scraping your activities.
-
-### 5. Merge your results (Optional)
-
-```sh
-# Execute a container to create a merged csv
-docker run --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -e GRANT_SUDO=yes --user root -v "$PWD":/home/jovyan/work jupyter/scipy-notebook
+```bash
+github-classroom-scraper -u YOUR_CLASSROOM_URL -o YOUR_OTP
 ```
 
-Made with 💙 from 🇲🇽
+The different options are:
+ 
+
+| Option | Name          | Description                                                                            | Required | Default |
+| ---    | ---           | ---                                                                                    | ---      | ---     |
+| u      | classroom-url | The URL of your classroom. e.g. https://classroom.github.com/classrooms/your-classroom | YES      | NA      |
+| o      | otp           | The one time password of your 2FA                                                      | YES      | NA      |
+| r      | regular-wait  | The waiting interval in ms for fetching info. Increase it for low speed connections    | NO       | 5000    |
+| h      | headless      | It controls if you see the automated browser or no                                     | NO       | true    |
+
+It will throw two files:
+
+- `resultsPerActivity.json`: All the results per activity in the following format:
+
+```json
+{
+  "Activity Name": [
+    {
+      "userName": username,
+      "description": The user's activity message. e.g. 'Latest commit passed 7 commits Submitted',
+      "activityTitle": Activity Name,
+      "isSubmitted": Parsed submitted value in description,
+      "commitsMade": Parsed commits value in description
+    }
+  ]
+}
+```
+
+- `resultsPerUser.csv`: A condensed activities for JS and Python exercises. It has the following columns:
+
+|User|Activities|Submitted|Python Completed|JS Completed|Total Tried Activities|
+
+## Contribution
+
+Fork the repo, and install the dependencies:
+
+```bash
+npm install
+```
+
+Feel free to open an issue or pull request. Contributions welcome!
+
+## License
+
+This project is licensed under the terms of the MIT license.
+
+
+Made with 💙 and 🌮 in 🇲🇽
