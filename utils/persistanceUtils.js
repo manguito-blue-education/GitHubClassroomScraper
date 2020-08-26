@@ -92,11 +92,11 @@ export const saveResultsPerUser = async parsedActivityList => {
   const csvWriter = createCsvWriter({
     path: `./resultsPerUser.csv`,
     header: [
-      { id: "userName", title: "Usuario" },
-      { id: "submittedActivities", title: "Actividades Subidas" },
-      { id: "solvedPythonActivities", title: "Actividades Completadas Python" },
-      { id: "solvedJsActivities", title: "Actividades Completadas JS" },
-      { id: "totalActivities", title: "Total de Actividades Intentadas" },
+      { id: "userName", title: "User" },
+      { id: "submittedActivities", title: "Activities" },
+      { id: "solvedPythonActivities", title: "Python Completed" },
+      { id: "solvedJsActivities", title: "JS Completed" },
+      { id: "totalActivities", title: "Total Tried Activities" },
     ],
   });
 
