@@ -1,6 +1,6 @@
 {
   "name": "@hackademymx/github-classroom-scraper",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Scraper for the GitHub Classroom site.",
   "main": "index.js",
   "type": "module",
