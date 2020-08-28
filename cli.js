@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import scrapper from "./index.js";
 import yargs from "yargs";
 
