@@ -22,10 +22,11 @@ export default async (
     headless = true,
     navigationTimeout = 24000,
     defaultViewport = null,
+    generateFiles = true,
   } = {}
 ) => {
+  const browser = await puppeteer.launch({ headless, defaultViewport });
   try {
-    const browser = await puppeteer.launch({ headless, defaultViewport });
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(navigationTimeout);
 
@@ -55,16 +56,20 @@ export default async (
       []
     );
 
-    await browser.close();
-    const parsedActivities = allActivities.map(activity =>
-      parseActivityInfo(activity)
-    );
-    saveResultsPerActivity(parsedActivities);
+    if (generateFiles) {
+      const parsedActivities = allActivities.map(activity =>
+        parseActivityInfo(activity)
+      );
+      saveResultsPerActivity(parsedActivities);
 
-    await saveResultsPerUser(parsedActivities);
+      await saveResultsPerUser(parsedActivities);
+    }
+
     return allActivities;
   } catch (error) {
     console.log("An error occured while parsing activities: ", error.message);
     return null;
+  } finally {
+    await browser.close();
   }
 };
